@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SimpleMusic</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">Music</string>
+    <string name="action_settings">设置</string>
 
+    <string name="all_music_item_txt">歌曲</string>
+    <string name="album_music_item_txt">专辑</string>
+    <string name="singer_music_item_txt">歌手</string>
+    <string name="favorite_music_item_txt">收藏</string>
 </resources>

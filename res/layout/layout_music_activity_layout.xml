@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/label_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/label_color"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/all_music_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingBottom="@dimen/label_bar_vertical_padding"
+            android:paddingTop="15dp"
+            android:text="@string/all_music_item_txt" />
+
+        <TextView
+            android:id="@+id/album_music_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingBottom="@dimen/label_bar_vertical_padding"
+            android:paddingTop="15dp"
+            android:text="@string/album_music_item_txt" />
+
+        <TextView
+            android:id="@+id/singer_music_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingBottom="@dimen/label_bar_vertical_padding"
+            android:paddingTop="15dp"
+            android:text="@string/singer_music_item_txt" />
+
+        <TextView
+            android:id="@+id/favorite_music_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingBottom="@dimen/label_bar_vertical_padding"
+            android:paddingTop="15dp"
+            android:text="@string/favorite_music_item_txt" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/content_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/label_bar"
+        android:background="@color/content_color" />
+
+</RelativeLayout>
