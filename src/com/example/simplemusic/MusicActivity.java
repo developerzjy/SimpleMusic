@@ -1,11 +1,9 @@
 package com.example.simplemusic;
 
-import com.example.simplemusic.fragment.AlbumFragment;
-import com.example.simplemusic.fragment.AllMusicFragment;
-import com.example.simplemusic.fragment.FavoriteFragment;
-import com.example.simplemusic.fragment.SingerFragment;
+import com.example.simplemusic.fragment.ContentFragment;
+import com.example.simplemusic.tools.Constants;
+import com.example.simplemusic.tools.StateControl;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.res.Resources;
@@ -24,10 +22,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     private int mLabelItemColor;
     private int mContentFragmentId;
     private FragmentManager mFragmentManager;
-    private AllMusicFragment mAllMusicFragment;
-    private AlbumFragment mAlbumFragment;
-    private SingerFragment mSingerFragment;
-    private FavoriteFragment mFavoriteFragment;
+    private ContentFragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,26 +57,23 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         mContentFragmentId = R.id.content_fragment;
         mFragmentManager = getFragmentManager();
 
-        mAllMusicFragment = new AllMusicFragment();
-        mAlbumFragment = new AlbumFragment();
-        mSingerFragment = new SingerFragment();
-        mFavoriteFragment = new FavoriteFragment();
-
-        initStratFragment();
+        initStratState();
     }
 
     private void initLabelColor() {
         mAllMusic.setBackgroundColor(mLabelColor);
         mAlbum.setBackgroundColor(mLabelColor);
-        ;
         mSinger.setBackgroundColor(mLabelColor);
         mFavorite.setBackgroundColor(mLabelColor);
     }
 
-    private void initStratFragment() {
+    private void initStratState() {
         mAllMusic.setBackgroundColor(mLabelItemColor);
+        StateControl.getInstance().setCurrentState(Constants.TitleState.MUSIC);
+
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.add(mContentFragmentId, mAllMusicFragment);
+        mFragment = new ContentFragment();
+        transaction.add(mContentFragmentId, mFragment);
         transaction.commit();
     }
 
@@ -90,14 +82,19 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         int id = v.getId();
 
         if (id == R.id.all_music_item) {
-            switchFragment(mAllMusicFragment);
+            StateControl.getInstance().setCurrentState(
+                    Constants.TitleState.MUSIC);
         } else if (id == R.id.album_music_item) {
-            switchFragment(mAlbumFragment);
+            StateControl.getInstance().setCurrentState(
+                    Constants.TitleState.ALBUM);
         } else if (id == R.id.singer_music_item) {
-            switchFragment(mSingerFragment);
+            StateControl.getInstance().setCurrentState(
+                    Constants.TitleState.ARTIST);
         } else if (id == R.id.favorite_music_item) {
-            switchFragment(mFavoriteFragment);
+            StateControl.getInstance().setCurrentState(
+                    Constants.TitleState.FAVORITE);
         }
+        mFragment.notifyList();
 
         if (v instanceof TextView) {
             initLabelColor();
@@ -105,9 +102,4 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         }
     }
 
-    private void switchFragment(Fragment fragment) {
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(mContentFragmentId, fragment);
-        transaction.commit();
-    }
 }
