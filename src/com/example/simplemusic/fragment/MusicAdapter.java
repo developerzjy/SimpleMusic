@@ -9,12 +9,15 @@ import com.example.simplemusic.MusicApplication;
 import com.example.simplemusic.R;
 import com.example.simplemusic.datastruct.MusicInfo;
 import com.example.simplemusic.tools.Constants;
+import com.example.simplemusic.tools.LoadIcon;
 import com.example.simplemusic.tools.MusicUtil;
 import com.example.simplemusic.tools.StateControl;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -26,11 +29,12 @@ public class MusicAdapter extends BaseAdapter {
     private ArrayList<MusicInfo> mData;
     private String mTitle;
     private String mInfo;
-    private Bitmap mIcon;
+    private String mIcon;
 
     private ArrayList<MusicInfo> mMusicList;
     private Map<String, ArrayList<MusicInfo>> mAlbumMap;
     private Map<String, ArrayList<MusicInfo>> mArtistMap;
+    private ArrayList<MusicInfo> mFavorList = new ArrayList<MusicInfo>();
     private Map<String, Integer> mArtistMusicNum = new HashMap<>();
 
     public MusicAdapter() {
@@ -57,6 +61,11 @@ public class MusicAdapter extends BaseAdapter {
             if (!isAlbum) {
                 Integer num = mArtistMusicNum.get(key);
                 mArtistMusicNum.put(key, num == null ? 1 : num + 1);
+
+                // init favor list
+                if (data.isFavor()) {
+                    mFavorList.add(data);
+                }
             }
         }
         return map;
@@ -72,7 +81,7 @@ public class MusicAdapter extends BaseAdapter {
         } else if (state == Constants.TitleState.ARTIST) {
             mData = getListDataByMap(mArtistMap);
         } else if (state == Constants.TitleState.FAVORITE) {
-
+            mData = mFavorList;
         }
         notifyDataSetChanged();
     }
@@ -118,6 +127,7 @@ public class MusicAdapter extends BaseAdapter {
             holder.icon = (ImageView) convertView.findViewById(R.id.item_icon);
             holder.title = (TextView) convertView.findViewById(R.id.item_title);
             holder.info = (TextView) convertView.findViewById(R.id.item_info);
+            holder.favor = (ImageView) convertView.findViewById(R.id.item_favor_bt);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -128,11 +138,45 @@ public class MusicAdapter extends BaseAdapter {
 
         if (state == Constants.TitleState.ALBUM) {
             holder.icon.setVisibility(View.VISIBLE);
-            holder.icon.setImageBitmap(mIcon);
+            Bitmap bt = LoadIcon.getInstance().load(mIcon);
+            holder.icon.setImageBitmap(bt == null ? MusicUtil
+                    .scaleBitmap(BitmapFactory.decodeResource(
+                            mContext.getResources(), R.drawable.default_album))
+                    : MusicUtil.scaleBitmap(bt));
         } else {
             holder.icon.setVisibility(View.GONE);
         }
 
+        
+        if (state == Constants.TitleState.MUSIC
+                || state == Constants.TitleState.FAVORITE) {
+            holder.favor.setVisibility(View.VISIBLE);
+            holder.favor
+                    .setImageResource(mData.get(position).isFavor() ? R.drawable.favorite_sel
+                            : R.drawable.favorite_nor);
+        } else {
+            holder.favor.setVisibility(View.GONE);
+        }
+        
+        final int pos = position;
+        final ImageView favorBt = holder.favor;
+        holder.favor.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                MusicInfo data = mData.get(pos);
+                if(data.isFavor()) {
+                    data.setFavor(false);
+                    cancelFavor(data);
+                    favorBt.setImageResource(R.drawable.favorite_nor);
+                } else {
+                    data.setFavor(true);
+                    addFavor(data);
+                    favorBt.setImageResource(R.drawable.favorite_sel);
+                }
+                notifyDataSetChanged();
+            }
+        });
+        
         holder.title.setText(mTitle);
         holder.info.setText(mInfo);
 
@@ -143,6 +187,7 @@ public class MusicAdapter extends BaseAdapter {
         ImageView icon;
         TextView title;
         TextView info;
+        ImageView favor;
     }
 
     private void setItemData(int state, int position) {
@@ -155,12 +200,51 @@ public class MusicAdapter extends BaseAdapter {
         } else if (state == Constants.TitleState.ALBUM) {
             mTitle = data.getAlbum();
             mInfo = data.getArtist();
-            // mIcon = 专辑图片
+            mIcon = data.getIcon();
         } else if (state == Constants.TitleState.ARTIST) {
             mTitle = data.getArtist();
-            mInfo = "" + mArtistMusicNum.get(mTitle) + "首歌曲";
+            mInfo = "" + mArtistMusicNum.get(mTitle) + mContext.getString(R.string.artist_music_num);
         } else if (state == Constants.TitleState.FAVORITE) {
-            // 收藏列表
+            mTitle = data.getTitle();
+            mInfo = data.getArtist() + " - " + data.getAlbum();
         }
     }
+    
+    public void addFavor(MusicInfo data) {
+        mFavorList.add(data);
+        MusicUtil.updataFavorDatabase(true,data);
+    }
+    
+    public void cancelFavor(MusicInfo data) {
+        Iterator<MusicInfo> iter = mFavorList.iterator();
+        while (iter.hasNext()) {
+            if (iter.next().equals(data)) {
+                iter.remove();
+            }
+        }
+        MusicUtil.updataFavorDatabase(false,data);
+    }
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

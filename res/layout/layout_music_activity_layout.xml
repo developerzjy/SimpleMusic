@@ -17,7 +17,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:paddingBottom="@dimen/label_bar_vertical_padding"
-            android:paddingTop="15dp"
+            android:paddingTop="@dimen/label_bar_vertical_padding"
             android:text="@string/all_music_item_txt" />
 
         <TextView
@@ -27,7 +27,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:paddingBottom="@dimen/label_bar_vertical_padding"
-            android:paddingTop="15dp"
+            android:paddingTop="@dimen/label_bar_vertical_padding"
             android:text="@string/album_music_item_txt" />
 
         <TextView
@@ -37,7 +37,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:paddingBottom="@dimen/label_bar_vertical_padding"
-            android:paddingTop="15dp"
+            android:paddingTop="@dimen/label_bar_vertical_padding"
             android:text="@string/singer_music_item_txt" />
 
         <TextView
@@ -47,7 +47,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:paddingBottom="@dimen/label_bar_vertical_padding"
-            android:paddingTop="15dp"
+            android:paddingTop="@dimen/label_bar_vertical_padding"
             android:text="@string/favorite_music_item_txt" />
     </LinearLayout>
 

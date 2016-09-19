@@ -8,4 +8,7 @@
     <string name="album_music_item_txt">专辑</string>
     <string name="singer_music_item_txt">歌手</string>
     <string name="favorite_music_item_txt">收藏</string>
+    
+    <string name="artist_music_num">首歌曲</string>
+    
 </resources>

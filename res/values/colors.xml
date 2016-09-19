@@ -2,5 +2,9 @@
 <resources>
     <color name="label_color">#2B2B2B</color>
     <color name="label_item_color">#3B3B3B</color>
-    <color name="content_color">#B7B7B7</color>
+    <color name="content_color">#FFFFFF</color>
+    
+    <color name="list_divider_color">#CFCFCF</color>
+    <color name="list_item_title_color">#212121</color>
+    <color name="list_item_info_color">#708090</color>
 </resources>

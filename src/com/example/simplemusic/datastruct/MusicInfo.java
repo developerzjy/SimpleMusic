@@ -2,13 +2,22 @@ package com.example.simplemusic.datastruct;
 
 public class MusicInfo {
 
-    private int id; // 音乐id
-    private String title; // 音乐标题
-    private String album; // 专辑
-    private String uri; // 音乐路径
-    private int length; // 长度
-    private String icon; // icon
-    private String artist; // 艺术家
+    private int id = -1; // 音乐id
+    private String title = null; // 音乐标题
+    private String album = null; // 专辑
+    private String uri = null; // 音乐路径
+    private int length = -1; // 长度
+    private String icon = null; // icon
+    private String artist = null; // 艺术家
+    private boolean isFavor = false; // 是否收藏
+
+    public boolean isFavor() {
+        return isFavor;
+    }
+
+    public void setFavor(boolean isFavor) {
+        this.isFavor = isFavor;
+    }
 
     public int getId() {
         return id;

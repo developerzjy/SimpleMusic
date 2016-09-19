@@ -9,7 +9,7 @@ public class StateControl {
         mCurrentState = Constants.TitleState.MUSIC;
     }
 
-    public static StateControl getInstance() {
+    public synchronized static StateControl getInstance() {
         if (mInstance == null) {
             mInstance = new StateControl();
         }

@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content" >
 
     <ImageView
         android:id="@+id/item_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@null"
-        android:padding="5dp" />
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/list_item_element_margin"
+        android:contentDescription="@null" />
 
     <TextView
         android:id="@+id/item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/item_icon"
-        android:textColor="#212121" />
+        android:layout_marginLeft="@dimen/list_item_element_margin"
+        android:layout_marginTop="@dimen/list_item_element_margin"
+        android:textSize="@dimen/item_title_text_size"
+        android:textColor="@color/list_item_title_color" />
 
     <TextView
         android:id="@+id/item_info"
@@ -23,6 +27,19 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/item_title"
         android:layout_toRightOf="@id/item_icon"
-        android:textColor="#708090" />
+        android:layout_marginLeft="@dimen/list_item_element_margin"
+        android:layout_marginBottom="@dimen/list_item_element_margin"
+        android:textSize="@dimen/item_info_text_size"
+        android:textColor="@color/list_item_info_color" />
+    
+    <ImageView 
+        android:id="@+id/item_favor_bt"
+        android:layout_width="@dimen/item_favor_bt_effect_width"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/list_item_element_margin"
+        android:layout_centerVertical="true"
+        android:src="@drawable/favorite_sel"
+        android:contentDescription="@null" />
 
 </RelativeLayout>
