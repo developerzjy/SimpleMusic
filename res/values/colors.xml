@@ -7,4 +7,6 @@
     <color name="list_divider_color">#CFCFCF</color>
     <color name="list_item_title_color">#212121</color>
     <color name="list_item_info_color">#708090</color>
+    
+    <color name="dividing_line_color">#B5B5B5</color>
 </resources>

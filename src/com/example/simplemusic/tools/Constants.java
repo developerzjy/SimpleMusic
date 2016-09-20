@@ -9,4 +9,9 @@ public class Constants {
         public static final int FAVORITE = 3;
     }
 
+    public static final String INTENT_KYE_POSITION = "position";
+    public static final int UPDATE_FREQUENCY_MILLISECOND = 500;
+    
+    
+    public static final int HANDLE_MSG_UPDATE_PROGRESS = 0;
 }

@@ -101,6 +101,10 @@ public class MusicAdapter extends BaseAdapter {
         return tempList;
     }
 
+    public ArrayList<MusicInfo> getData() {
+        return mData;
+    }
+    
     @Override
     public int getCount() {
         return mData.size();

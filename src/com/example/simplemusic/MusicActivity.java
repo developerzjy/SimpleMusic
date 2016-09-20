@@ -27,7 +27,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_music_activity_layout);
+        setContentView(R.layout.music_activity_layout);
         init();
     }
 
@@ -94,7 +94,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
             StateControl.getInstance().setCurrentState(
                     Constants.TitleState.FAVORITE);
         }
-        mFragment.notifyList();
+        mFragment.updateList();
 
         if (v instanceof TextView) {
             initLabelColor();

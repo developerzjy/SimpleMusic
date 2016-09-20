@@ -4,6 +4,9 @@ import android.util.Log;
 
 public class MusicLog {
 
+    
+    private static final String FILTER_HELP = "music log: ";
+    
     private static final int VERBOSE = 1;
     private static final int DEBUG = 2;
     private static final int INFO = 3;
@@ -21,7 +24,7 @@ public class MusicLog {
 
     public static void d(String tag, String msg) {
         if (LEVEL <= DEBUG) {
-            Log.d(tag, msg);
+            Log.d(tag, FILTER_HELP+msg);
         }
     }
 

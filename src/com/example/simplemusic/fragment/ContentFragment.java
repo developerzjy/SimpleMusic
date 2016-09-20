@@ -1,9 +1,18 @@
 package com.example.simplemusic.fragment;
 
+import java.util.ArrayList;
+
+import com.example.simplemusic.MusicActivity;
+import com.example.simplemusic.PlayActivity;
 import com.example.simplemusic.R;
+import com.example.simplemusic.datastruct.MusicInfo;
+import com.example.simplemusic.tools.Constants;
+import com.example.simplemusic.tools.MusicUtil;
+import com.example.simplemusic.tools.StateControl;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +25,8 @@ public class ContentFragment extends Fragment {
 
     private ListView mMusicListView;
     private MusicAdapter mAdapter;
+    private ArrayList<MusicInfo> mData;
+    private MusicActivity mActivity;
 
     @SuppressLint("InflateParams")
     @Override
@@ -23,6 +34,7 @@ public class ContentFragment extends Fragment {
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.music_list_fragment, null);
         initView(view);
+        init();
         return view;
     }
 
@@ -35,12 +47,33 @@ public class ContentFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                     long arg3) {
-                System.out.println(":::点击item");
+                int state = StateControl.getInstance().getCurrentState();
+                MusicInfo musicInfo = mData.get(arg2);
+                int position = MusicUtil.getPosByMusicInfo(musicInfo);
+                if (state == Constants.TitleState.MUSIC
+                        || state == Constants.TitleState.FAVORITE) {
+                    mActivity.play(musicInfo);
+                    startPlayActivity(position);
+                } else {
+                    System.out.println(":::跳转其他页面。。。");
+                }
             }
         });
     }
 
-    public void notifyList() {
+    private void init() {
+        mActivity = (MusicActivity) getActivity();
+        mData = mAdapter.getData();
+    }
+
+    public void updateList() {
         mAdapter.updateData();
+        mData = mAdapter.getData();
+    }
+
+    private void startPlayActivity(int position) {
+        Intent intent = new Intent(mActivity, PlayActivity.class);
+        intent.putExtra(Constants.INTENT_KYE_POSITION, position);
+        startActivity(intent);
     }
 }

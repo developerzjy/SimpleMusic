@@ -1,8 +1,11 @@
 package com.example.simplemusic.tools;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -32,6 +35,14 @@ public class MusicUtil {
         updateMusicData();
         MusicLog.d("MusicUtil", "query music num:" + mMusicData.size());
         return mMusicData;
+    }
+
+    public static ArrayList<MusicInfo> getMusicList() {
+        return mMusicData;
+    }
+
+    public static int getPosByMusicInfo(MusicInfo musicInfo) {
+        return mMusicData.indexOf(musicInfo);
     }
 
     private static void initFavorData() {
@@ -81,7 +92,6 @@ public class MusicUtil {
             String album = cursor.getString(cursor
                     .getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
 
-            System.out.println(":::专辑："+album);
             music = new MusicInfo();
             music.setId(cursor.getInt(cursor
                     .getColumnIndexOrThrow(MediaStore.Audio.Media._ID)));
@@ -192,5 +202,11 @@ public class MusicUtil {
                     + "  query data count:" + cursor.getCount());
         }
 
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public static String formatTime(int ms) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
+        return simpleDateFormat.format(new Date(ms));
     }
 }

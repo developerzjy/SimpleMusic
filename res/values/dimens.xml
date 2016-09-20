@@ -10,4 +10,8 @@
     <dimen name="item_title_text_size">15sp</dimen>
     <dimen name="item_info_text_size">13sp</dimen>
     <dimen name="item_favor_bt_effect_width">50dp</dimen>
+    
+    <dimen name="title_bt_horizontal_padding">10dp</dimen>
+    <dimen name="title_bt_vertical_padding">6dp</dimen>
+    <dimen name="dividing_line_height">2px</dimen>
 </resources>
