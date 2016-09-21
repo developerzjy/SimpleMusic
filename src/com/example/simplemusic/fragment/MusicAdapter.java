@@ -36,6 +36,7 @@ public class MusicAdapter extends BaseAdapter {
     private Map<String, ArrayList<MusicInfo>> mArtistMap;
     private ArrayList<MusicInfo> mFavorList = new ArrayList<MusicInfo>();
     private Map<String, Integer> mArtistMusicNum = new HashMap<>();
+    private MusicInfo mCurrentMusic;
 
     public MusicAdapter() {
         mContext = MusicApplication.getContext();
@@ -71,6 +72,16 @@ public class MusicAdapter extends BaseAdapter {
         return map;
     }
 
+    public void updateFavor() {
+        MusicInfo music = MusicUtil.getCurrentMusic();
+        boolean isInFavor = mFavorList.contains(music);
+        if (isInFavor && !music.isFavor()) {
+            mFavorList.remove(music);
+        } else if (!isInFavor && music.isFavor()) {
+            mFavorList.add(music);
+        }
+    }
+    
     public void updateData() {
         int state = StateControl.getInstance().getCurrentState();
 
@@ -101,6 +112,11 @@ public class MusicAdapter extends BaseAdapter {
         return tempList;
     }
 
+    public void setCurrentMusic(MusicInfo music){
+        mCurrentMusic = music;
+        notifyDataSetChanged();
+    }
+    
     public ArrayList<MusicInfo> getData() {
         return mData;
     }
@@ -137,6 +153,8 @@ public class MusicAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        holder.title.setTextColor(mContext.getResources().getColor(R.color.list_item_title_color));
+
         int state = StateControl.getInstance().getCurrentState();
         setItemData(state, position);
 
@@ -151,13 +169,18 @@ public class MusicAdapter extends BaseAdapter {
             holder.icon.setVisibility(View.GONE);
         }
 
-        
+        System.out.println(":::getview.........");
         if (state == Constants.TitleState.MUSIC
                 || state == Constants.TitleState.FAVORITE) {
             holder.favor.setVisibility(View.VISIBLE);
             holder.favor
                     .setImageResource(mData.get(position).isFavor() ? R.drawable.favorite_sel
                             : R.drawable.favorite_nor);
+            if((mData.get(position).equals(mCurrentMusic))){
+                holder.title.setTextColor(mContext.getResources().getColor(R.color.list_item_title_play_color));
+            } else {
+                holder.title.setTextColor(mContext.getResources().getColor(R.color.list_item_title_color));
+            }
         } else {
             holder.favor.setVisibility(View.GONE);
         }
@@ -217,6 +240,7 @@ public class MusicAdapter extends BaseAdapter {
     public void addFavor(MusicInfo data) {
         mFavorList.add(data);
         MusicUtil.updataFavorDatabase(true,data);
+        notifyDataSetChanged();
     }
     
     public void cancelFavor(MusicInfo data) {
@@ -228,7 +252,6 @@ public class MusicAdapter extends BaseAdapter {
         }
         MusicUtil.updataFavorDatabase(false,data);
     }
-    
 }
 
 

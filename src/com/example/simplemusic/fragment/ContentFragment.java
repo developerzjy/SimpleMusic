@@ -6,7 +6,9 @@ import com.example.simplemusic.MusicActivity;
 import com.example.simplemusic.PlayActivity;
 import com.example.simplemusic.R;
 import com.example.simplemusic.datastruct.MusicInfo;
+import com.example.simplemusic.service.OnPlayEventListener;
 import com.example.simplemusic.tools.Constants;
+import com.example.simplemusic.tools.MusicLog;
 import com.example.simplemusic.tools.MusicUtil;
 import com.example.simplemusic.tools.StateControl;
 
@@ -27,6 +29,7 @@ public class ContentFragment extends Fragment {
     private MusicAdapter mAdapter;
     private ArrayList<MusicInfo> mData;
     private MusicActivity mActivity;
+    private OnPlayEventListener mOnPlayEventListener;
 
     @SuppressLint("InflateParams")
     @Override
@@ -53,7 +56,9 @@ public class ContentFragment extends Fragment {
                 if (state == Constants.TitleState.MUSIC
                         || state == Constants.TitleState.FAVORITE) {
                     mActivity.play(musicInfo);
-                    startPlayActivity(position);
+                    MusicUtil.setCurrentMusic(musicInfo);
+                    mAdapter.setCurrentMusic(musicInfo);
+                    startPlayActivity(position, true);
                 } else {
                     System.out.println(":::跳转其他页面。。。");
                 }
@@ -64,6 +69,23 @@ public class ContentFragment extends Fragment {
     private void init() {
         mActivity = (MusicActivity) getActivity();
         mData = mAdapter.getData();
+        mOnPlayEventListener = new OnPlayEventListener() {
+
+            @Override
+            public void onFinished() {
+                MusicLog.d("ContentFragment", "current music has finished");
+                mActivity.playNext();
+                updateListUI();
+            }
+        };
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mActivity.setMusicCompleteListener(mOnPlayEventListener);
+        mAdapter.setCurrentMusic(MusicUtil.getCurrentMusic());
+        mAdapter.updateFavor();
     }
 
     public void updateList() {
@@ -71,9 +93,17 @@ public class ContentFragment extends Fragment {
         mData = mAdapter.getData();
     }
 
-    private void startPlayActivity(int position) {
+    private void startPlayActivity(int position, boolean isPlayingMusic) {
         Intent intent = new Intent(mActivity, PlayActivity.class);
         intent.putExtra(Constants.INTENT_KYE_POSITION, position);
+        intent.putExtra(Constants.INTENT_KYE_IS_PLAYING, isPlayingMusic);
         startActivity(intent);
+    }
+    
+    private void updateListUI() {
+        StateControl.getInstance().setCurrentState(
+                Constants.TitleState.MUSIC);
+        mAdapter.setCurrentMusic(MusicUtil.getCurrentMusic());
+        mAdapter.notifyDataSetChanged();
     }
 }

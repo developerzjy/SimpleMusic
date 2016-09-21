@@ -8,6 +8,7 @@ import java.util.Date;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -208,5 +209,43 @@ public class MusicUtil {
     public static String formatTime(int ms) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
         return simpleDateFormat.format(new Date(ms));
+    }
+
+    public static void setCurrentMusic(MusicInfo music) {
+        SharedPreferences sp = MusicApplication.getContext()
+                .getSharedPreferences(Constants.MUSIC_SHARED_PREFS, 0);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(Constants.SHARED_PREFS_KEY_MUSIC_NAME,
+                music.getTitle());
+        editor.putString(Constants.SHARED_PREFS_KEY_MUSIC_ARTIST,
+                music.getArtist());
+        editor.putString(Constants.SHARED_PREFS_KEY_MUSIC_ALBUM,
+                music.getAlbum());
+        editor.commit();
+    }
+
+    public static MusicInfo getCurrentMusic() {
+        MusicInfo music = new MusicInfo();
+        SharedPreferences sp = MusicApplication.getContext()
+                .getSharedPreferences(Constants.MUSIC_SHARED_PREFS, 0);
+        String title = sp
+                .getString(Constants.SHARED_PREFS_KEY_MUSIC_NAME, null);
+        String artist = sp.getString(Constants.SHARED_PREFS_KEY_MUSIC_ARTIST,
+                null);
+        String album = sp.getString(Constants.SHARED_PREFS_KEY_MUSIC_ALBUM,
+                null);
+        if (title == null || artist == null || album == null) {
+            return null;
+        }
+        int size = mMusicData.size();
+        for (int i = 0; i < size; i++) {
+            MusicInfo temp = mMusicData.get(i);
+            if (title.equals(temp.getTitle())
+                    && artist.equals(temp.getArtist())
+                    && album.equals(temp.getAlbum())) {
+                music = temp;
+            }
+        }
+        return music;
     }
 }

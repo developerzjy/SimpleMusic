@@ -1,5 +1,7 @@
-package com.example.simplemusic;
+package com.example.simplemusic.service;
 
+import com.example.simplemusic.BaseActivity;
+import com.example.simplemusic.R;
 import com.example.simplemusic.tools.MusicLog;
 
 import android.annotation.SuppressLint;

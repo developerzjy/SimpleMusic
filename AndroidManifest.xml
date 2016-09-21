@@ -36,7 +36,7 @@
         
         <activity android:name="com.example.simplemusic.PlayActivity"></activity>
         
-        <service android:name="com.example.simplemusic.PlayService"></service>
+        <service android:name="com.example.simplemusic.service.PlayService"></service>
     </application>
 
 </manifest>

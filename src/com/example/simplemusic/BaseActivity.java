@@ -1,7 +1,13 @@
 package com.example.simplemusic;
 
+import java.util.ArrayList;
+
 import com.example.simplemusic.datastruct.MusicInfo;
+import com.example.simplemusic.service.OnPlayEventListener;
+import com.example.simplemusic.service.PlayController;
+import com.example.simplemusic.service.PlayService;
 import com.example.simplemusic.tools.MusicLog;
+import com.example.simplemusic.tools.MusicUtil;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -16,7 +22,7 @@ public class BaseActivity extends Activity {
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            MusicLog.d("BaseActivity", "onServiceDisconnected");
+
         }
 
         @Override
@@ -37,7 +43,45 @@ public class BaseActivity extends Activity {
     }
 
     public void play(MusicInfo music) {
-        mPlayer.setCurrentMusic(music);
-        mPlayer.play();
+        mPlayer.play(music);
+    }
+
+    public void playPrevious() {
+        MusicInfo currentMusic = MusicUtil.getCurrentMusic();
+        ArrayList<MusicInfo> musicList = MusicUtil.getMusicList();
+        int currentPos = musicList.indexOf(currentMusic);
+        int prePos = currentPos == 0 ? musicList.size() : (currentPos - 1);
+        MusicInfo preMusic = musicList.get(prePos);
+        mPlayer.play(preMusic);
+        MusicUtil.setCurrentMusic(preMusic);
+    }
+    
+    public void playNext() {
+        MusicInfo currentMusic = MusicUtil.getCurrentMusic();
+        ArrayList<MusicInfo> musicList = MusicUtil.getMusicList();
+        int currentPos = musicList.indexOf(currentMusic);
+        int nextPos = currentPos >= (musicList.size() + 1) ? 0
+                : (currentPos + 1);
+        MusicInfo nextMusic = musicList.get(nextPos);
+        mPlayer.play(nextMusic);
+        MusicUtil.setCurrentMusic(nextMusic);
+    }
+
+    public void seekTo(int msec) {
+        mPlayer.seekTo(msec);
+    }
+
+    public void start() {
+        mPlayer.start();
+    }
+
+    public void pause() {
+        mPlayer.pause();
+    }
+
+    public void setMusicCompleteListener(OnPlayEventListener listener) {
+        if (mPlayer != null) {
+            mPlayer.setOnPlayEventListener(listener);
+        }
     }
 }
