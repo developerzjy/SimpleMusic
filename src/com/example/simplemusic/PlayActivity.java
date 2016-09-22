@@ -82,7 +82,7 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
 
         updateUIByMusic(music);
 
-        mBack.setText("列表");
+        mBack.setText(getResources().getString(R.string.back_list_str));
         mPrevious.setImageResource(R.drawable.pre_sel);
         mSwitch.setImageResource(mIsPlaying ? R.drawable.stop_sel
                 : R.drawable.play_sel);
@@ -92,7 +92,8 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                seekTo(mSeekBar.getProgress());
+                if (mPlayer.isPlaying())
+                    seekTo(mSeekBar.getProgress());
             }
 
             @Override
