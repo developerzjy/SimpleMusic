@@ -50,21 +50,22 @@ public class BaseActivity extends Activity {
         MusicInfo currentMusic = MusicUtil.getCurrentMusic();
         ArrayList<MusicInfo> musicList = MusicUtil.getMusicList();
         int currentPos = musicList.indexOf(currentMusic);
-        int prePos = currentPos == 0 ? musicList.size() : (currentPos - 1);
+        int prePos = currentPos == 0 ? (musicList.size() - 1)
+                : (currentPos - 1);
         MusicInfo preMusic = musicList.get(prePos);
-        mPlayer.play(preMusic);
         MusicUtil.setCurrentMusic(preMusic);
+        mPlayer.play(preMusic);
     }
 
     public void playNext() {
         MusicInfo currentMusic = MusicUtil.getCurrentMusic();
         ArrayList<MusicInfo> musicList = MusicUtil.getMusicList();
         int currentPos = musicList.indexOf(currentMusic);
-        int nextPos = currentPos >= (musicList.size() + 1) ? 0
+        int nextPos = currentPos >= (musicList.size() - 1) ? 0
                 : (currentPos + 1);
         MusicInfo nextMusic = musicList.get(nextPos);
-        mPlayer.play(nextMusic);
         MusicUtil.setCurrentMusic(nextMusic);
+        mPlayer.play(nextMusic);
     }
 
     public void seekTo(int msec) {

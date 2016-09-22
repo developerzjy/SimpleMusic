@@ -47,6 +47,7 @@ public class MusicUtil {
     }
 
     private static void initFavorData() {
+        mFavorData.clear();
         DatabaseHelper dbHelper = new DatabaseHelper(
                 MusicApplication.getContext(), DatabaseHelper.DATABASE_NAME,
                 null, DatabaseHelper.DATABASE_VERSION);

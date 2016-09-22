@@ -16,7 +16,8 @@ import android.os.IBinder;
 public class PlayService extends Service {
 
     private PlayController mPlayer = new PlayController();
-    
+    private OnNextMusicListener mListener;
+
     @Override
     public IBinder onBind(Intent intent) {
         return mPlayer;
@@ -25,7 +26,15 @@ public class PlayService extends Service {
     @Override
     public void onCreate() {
         MusicLog.d("PlayService", "PlayService onCreate");
-        
+
+        mListener = new OnNextMusicListener() {
+
+            @Override
+            public void onUpdateNotification() {
+                setNotification();
+            }
+        };
+        mPlayer.setOnNextMusicListener(mListener);
         setNotification();
         super.onCreate();
     }
@@ -52,16 +61,16 @@ public class PlayService extends Service {
         Notification.Builder builder = new Notification.Builder(this);
         builder.setSmallIcon(R.drawable.ic_launcher);
         builder.setContentTitle(title);
-        builder.setContentText(artist+" - "+album);
+        builder.setContentText(artist + " - " + album);
         builder.setOngoing(true);
         Intent intent = new Intent(this, MusicActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 intent, 0);
         builder.setContentIntent(pendingIntent);
-        
+
         Notification notification = builder.build();
-        
+
         startForeground(1, notification);
     }
-    
+
 }

@@ -223,6 +223,7 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
 
     @Override
     public void playPrevious() {
+        boolean isTrue = mPlayer.isPlaying();
         super.playPrevious();
         updateUIByMusic(MusicUtil.getCurrentMusic());
         if (mPositionInList == 0) {
@@ -230,16 +231,29 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
         } else {
             mPositionInList--;
         }
+        if (!isTrue) {
+            pause();
+            mCurrentTime.setText(getResources().getString(
+                    R.string.init_time_str));
+            mSeekBar.setProgress(0);
+        }
     }
 
     @Override
     public void playNext() {
+        boolean isTrue = mPlayer.isPlaying();
         super.playNext();
         updateUIByMusic(MusicUtil.getCurrentMusic());
         if (mPositionInList == mMusicList.size()) {
             mPositionInList = 0;
         } else {
             mPositionInList++;
+        }
+        if (!isTrue) {
+            pause();
+            mCurrentTime.setText(getResources().getString(
+                    R.string.init_time_str));
+            mSeekBar.setProgress(0);
         }
     }
 

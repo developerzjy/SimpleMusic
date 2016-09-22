@@ -48,6 +48,14 @@ public class MusicAdapter extends BaseAdapter {
         updateData();
     }
 
+    public ArrayList<MusicInfo> getMusicListByKey(String key) {
+        if (StateControl.getInstance().getCurrentState() == Constants.TitleState.ARTIST) {
+            return mArtistMap.get(key);
+        } else {
+            return mAlbumMap.get(key);
+        }
+    }
+
     private Map<String, ArrayList<MusicInfo>> initMap(boolean isAlbum) {
         Map<String, ArrayList<MusicInfo>> map = new HashMap<>();
 
@@ -113,6 +121,8 @@ public class MusicAdapter extends BaseAdapter {
     }
 
     public void resetData() {
+        mArtistMusicNum.clear();
+        mFavorList.clear();
         mMusicList = MusicUtil.getMusicData();
         mAlbumMap = initMap(true);
         mArtistMap = initMap(false);
@@ -121,7 +131,7 @@ public class MusicAdapter extends BaseAdapter {
         mCurrentMusic = MusicUtil.getCurrentMusic();
         notifyDataSetChanged();
     }
-    
+
     public void setCurrentMusic(MusicInfo music) {
         mCurrentMusic = music;
         notifyDataSetChanged();

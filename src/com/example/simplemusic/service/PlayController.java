@@ -13,6 +13,7 @@ public class PlayController extends Binder implements
     private MediaPlayer mPlayer;
     private OnPlayEventListener mListener = null;
     private boolean mIsSetRes = false;
+    private OnNextMusicListener mNextListener;
 
     public PlayController() {
         mPlayer = new MediaPlayer();
@@ -21,6 +22,10 @@ public class PlayController extends Binder implements
 
     public void setOnPlayEventListener(OnPlayEventListener listener) {
         mListener = listener;
+    }
+
+    public void setOnNextMusicListener(OnNextMusicListener listener) {
+        mNextListener = listener;
     }
 
     public boolean isSetDataSource() {
@@ -37,6 +42,7 @@ public class PlayController extends Binder implements
             mIsSetRes = true;
 
             mPlayer.start();
+            mNextListener.onUpdateNotification();
         } catch (Exception e) {
             MusicLog.e("PlayController", "play music exception:" + e);
         }
@@ -45,6 +51,7 @@ public class PlayController extends Binder implements
 
     public void seekTo(int msec) {
         mPlayer.seekTo(msec);
+        mNextListener.onUpdateNotification();
     }
 
     public void start() {
@@ -59,6 +66,7 @@ public class PlayController extends Binder implements
             }
         }
         mPlayer.start();
+        mNextListener.onUpdateNotification();
     }
 
     public void pause() {

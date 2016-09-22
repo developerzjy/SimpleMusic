@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.example.simplemusic.MusicActivity;
 import com.example.simplemusic.PlayActivity;
 import com.example.simplemusic.R;
+import com.example.simplemusic.SubActivity;
 import com.example.simplemusic.datastruct.MusicInfo;
 import com.example.simplemusic.service.OnPlayEventListener;
 import com.example.simplemusic.tools.Constants;
@@ -55,12 +56,18 @@ public class ContentFragment extends Fragment {
                 int position = MusicUtil.getPosByMusicInfo(musicInfo);
                 if (state == Constants.TitleState.MUSIC
                         || state == Constants.TitleState.FAVORITE) {
-                    mActivity.play(musicInfo);
                     MusicUtil.setCurrentMusic(musicInfo);
+                    mActivity.play(musicInfo);
                     mAdapter.setCurrentMusic(musicInfo);
                     startPlayActivity(position, true);
                 } else {
-                    // 跳转到其他页面
+                    String title;
+                    if(state == Constants.TitleState.ARTIST){
+                        title = musicInfo.getArtist();
+                    } else {
+                        title = musicInfo.getAlbum();
+                    }
+                    startSubActivity(title);
                 }
             }
         });
@@ -100,13 +107,20 @@ public class ContentFragment extends Fragment {
         startActivity(intent);
     }
 
+    public void startSubActivity(String title) {
+        Intent intent = new Intent(mActivity, SubActivity.class);
+        intent.putExtra(Constants.INTENT_KEY_TITLE, title);
+        startActivity(intent);
+    }
+
     private void updateListUI() {
         StateControl.getInstance().setCurrentState(Constants.TitleState.MUSIC);
         mAdapter.setCurrentMusic(MusicUtil.getCurrentMusic());
         mAdapter.notifyDataSetChanged();
     }
-    
+
     public void updateAllDate() {
         mAdapter.resetData();
+        mData = mAdapter.getData();
     }
 }

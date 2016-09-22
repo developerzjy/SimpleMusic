@@ -27,7 +27,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     private int mContentFragmentId;
     private FragmentManager mFragmentManager;
     private ContentFragment mFragment;
-    
+
     private ImageView mMusicIcon;
     private TextView mMusicTitle;
     private TextView mMusicInfo;
@@ -50,16 +50,16 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         mAlbum = (TextView) findViewById(R.id.album_music_item);
         mSinger = (TextView) findViewById(R.id.singer_music_item);
         mFavorite = (TextView) findViewById(R.id.favorite_music_item);
-        mMusicIcon = (ImageView)findViewById(R.id.music_list_icon);
-        mMusicTitle = (TextView)findViewById(R.id.current_music_title);
-        mMusicInfo = (TextView)findViewById(R.id.current_music_info);
-        mScanBt = (Button)findViewById(R.id.scan_music_bt);
+        mMusicIcon = (ImageView) findViewById(R.id.music_list_icon);
+        mMusicTitle = (TextView) findViewById(R.id.current_music_title);
+        mMusicInfo = (TextView) findViewById(R.id.current_music_info);
+        mScanBt = (Button) findViewById(R.id.scan_music_bt);
 
         Resources resources = getResources();
         mLabelColor = resources.getColor(R.color.label_color);
         mLabelItemColor = resources.getColor(R.color.label_item_color);
         initLabelColor();
-        
+
         initToolBar();
 
         mAllMusic.setOnClickListener(this);
@@ -74,7 +74,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         mContentFragmentId = R.id.content_fragment;
         mFragmentManager = getFragmentManager();
 
-        initStratState();
+        initStartState();
     }
 
     private void initLabelColor() {
@@ -84,7 +84,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         mFavorite.setBackgroundColor(mLabelColor);
     }
 
-    private void initStratState() {
+    private void initStartState() {
         mAllMusic.setBackgroundColor(mLabelItemColor);
         StateControl.getInstance().setCurrentState(Constants.TitleState.MUSIC);
 
@@ -102,7 +102,7 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         mMusicTitle.setText(music.getTitle());
         mMusicInfo.setText(music.getArtist() + " - " + music.getAlbum());
     }
-    
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -119,12 +119,17 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         } else if (id == R.id.favorite_music_item) {
             StateControl.getInstance().setCurrentState(
                     Constants.TitleState.FAVORITE);
-        } else if(id == R.id.scan_music_bt){
-            StateControl.getInstance().setCurrentState(Constants.TitleState.MUSIC);
+        } else if (id == R.id.scan_music_bt) {
+            StateControl.getInstance().setCurrentState(
+                    Constants.TitleState.MUSIC);
             MusicUtil.updateMusicData();
             mFragment.updateAllDate();
+            mAllMusic.setBackgroundColor(mLabelItemColor);
+            mAlbum.setBackgroundColor(mLabelColor);
+            mSinger.setBackgroundColor(mLabelColor);
+            mFavorite.setBackgroundColor(mLabelColor);
             return;
-        } else if(id == R.id.music_list_icon){
+        } else if (id == R.id.music_list_icon) {
             mFragment.startPlayActivity(0, mPlayer.isPlaying());
             return;
         }

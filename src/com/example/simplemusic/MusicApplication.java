@@ -23,7 +23,7 @@ public class MusicApplication extends Application {
         mContext = getApplicationContext();
         StateControl.getInstance().setCurrentState(Constants.TitleState.MUSIC);
         startService(new Intent(this, PlayService.class));
-        if(isFirst()){
+        if (isFirst()) {
             MusicLog.d("MusicApplication", "first start the app");
             MusicUtil.setCurrentMusic(MusicUtil.getMusicData().get(0));
         }
@@ -32,7 +32,7 @@ public class MusicApplication extends Application {
     public static Context getContext() {
         return mContext;
     }
-    
+
     private boolean isFirst() {
         SharedPreferences sp = getSharedPreferences(
                 Constants.MUSIC_SHARED_PREFS, 0);

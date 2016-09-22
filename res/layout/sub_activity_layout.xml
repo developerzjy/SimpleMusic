@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/content_color" >
+
+    <RelativeLayout
+        android:id="@+id/sub_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/label_color"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/sub_title_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:gravity="center"
+            android:paddingBottom="@dimen/label_bar_vertical_padding"
+            android:paddingTop="@dimen/label_bar_vertical_padding" />
+
+        <Button
+            android:id="@+id/sub_title_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:background="@color/label_color"
+            android:gravity="center"
+            android:text="@string/back_bt_str" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/sub_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@color/list_divider_color"
+        android:layout_below="@id/sub_title"
+        android:dividerHeight="1px"
+        android:listSelector="@android:color/transparent"
+        android:overScrollMode="never"
+        android:scrollbars="none" />
+
+</RelativeLayout>

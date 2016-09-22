@@ -11,6 +11,7 @@ public class Constants {
 
     public static final String INTENT_KYE_POSITION = "position";
     public static final String INTENT_KYE_IS_PLAYING = "isPlaying";
+    public static final String INTENT_KEY_TITLE = "title";
     public static final int UPDATE_FREQUENCY_MILLISECOND = 500;
 
     public static final int HANDLE_MSG_UPDATE_PROGRESS = 0;
