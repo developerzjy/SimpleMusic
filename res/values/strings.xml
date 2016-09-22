@@ -10,5 +10,11 @@
     <string name="favorite_music_item_txt">收藏</string>
     
     <string name="artist_music_num">首歌曲</string>
+    <string name="scan_music_str">扫描歌曲</string>
+    
+    
+    <string name="play_music_artist_str">作者：</string>
+    <string name="play_music_album_str">专辑：</string>
+    <string name="init_time_str">00:00</string>
     
 </resources>

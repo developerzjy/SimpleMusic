@@ -1,7 +1,9 @@
 package com.example.simplemusic;
 
+import com.example.simplemusic.datastruct.MusicInfo;
 import com.example.simplemusic.fragment.ContentFragment;
 import com.example.simplemusic.tools.Constants;
+import com.example.simplemusic.tools.MusicUtil;
 import com.example.simplemusic.tools.StateControl;
 
 import android.app.FragmentManager;
@@ -10,6 +12,8 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MusicActivity extends BaseActivity implements OnClickListener {
@@ -23,6 +27,11 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
     private int mContentFragmentId;
     private FragmentManager mFragmentManager;
     private ContentFragment mFragment;
+    
+    private ImageView mMusicIcon;
+    private TextView mMusicTitle;
+    private TextView mMusicInfo;
+    private Button mScanBt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,16 +50,24 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         mAlbum = (TextView) findViewById(R.id.album_music_item);
         mSinger = (TextView) findViewById(R.id.singer_music_item);
         mFavorite = (TextView) findViewById(R.id.favorite_music_item);
+        mMusicIcon = (ImageView)findViewById(R.id.music_list_icon);
+        mMusicTitle = (TextView)findViewById(R.id.current_music_title);
+        mMusicInfo = (TextView)findViewById(R.id.current_music_info);
+        mScanBt = (Button)findViewById(R.id.scan_music_bt);
 
         Resources resources = getResources();
         mLabelColor = resources.getColor(R.color.label_color);
         mLabelItemColor = resources.getColor(R.color.label_item_color);
         initLabelColor();
+        
+        initToolBar();
 
         mAllMusic.setOnClickListener(this);
         mAlbum.setOnClickListener(this);
         mSinger.setOnClickListener(this);
         mFavorite.setOnClickListener(this);
+        mMusicIcon.setOnClickListener(this);
+        mScanBt.setOnClickListener(this);
     }
 
     private void initFragment() {
@@ -77,6 +94,15 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         transaction.commit();
     }
 
+    private void initToolBar() {
+        MusicInfo music = MusicUtil.getCurrentMusic();
+        if (music == null) {
+            return;
+        }
+        mMusicTitle.setText(music.getTitle());
+        mMusicInfo.setText(music.getArtist() + " - " + music.getAlbum());
+    }
+    
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -93,7 +119,16 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         } else if (id == R.id.favorite_music_item) {
             StateControl.getInstance().setCurrentState(
                     Constants.TitleState.FAVORITE);
+        } else if(id == R.id.scan_music_bt){
+            StateControl.getInstance().setCurrentState(Constants.TitleState.MUSIC);
+            MusicUtil.updateMusicData();
+            mFragment.updateAllDate();
+            return;
+        } else if(id == R.id.music_list_icon){
+            mFragment.startPlayActivity(0, mPlayer.isPlaying());
+            return;
         }
+
         mFragment.updateList();
 
         if (v instanceof TextView) {
@@ -102,4 +137,9 @@ public class MusicActivity extends BaseActivity implements OnClickListener {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initToolBar();
+    }
 }

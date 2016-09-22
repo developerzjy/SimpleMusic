@@ -55,7 +55,7 @@ public class BaseActivity extends Activity {
         mPlayer.play(preMusic);
         MusicUtil.setCurrentMusic(preMusic);
     }
-    
+
     public void playNext() {
         MusicInfo currentMusic = MusicUtil.getCurrentMusic();
         ArrayList<MusicInfo> musicList = MusicUtil.getMusicList();
@@ -77,6 +77,10 @@ public class BaseActivity extends Activity {
 
     public void pause() {
         mPlayer.pause();
+    }
+
+    public boolean isSetDataSource() {
+        return mPlayer.isSetDataSource();
     }
 
     public void setMusicCompleteListener(OnPlayEventListener listener) {

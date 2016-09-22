@@ -1,8 +1,10 @@
 package com.example.simplemusic.service;
 
-import com.example.simplemusic.BaseActivity;
+import com.example.simplemusic.MusicActivity;
 import com.example.simplemusic.R;
+import com.example.simplemusic.datastruct.MusicInfo;
 import com.example.simplemusic.tools.MusicLog;
+import com.example.simplemusic.tools.MusicUtil;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -40,20 +42,25 @@ public class PlayService extends Service {
         super.onDestroy();
     }
 
-    // 待完善
     @SuppressLint("NewApi")
     private void setNotification() {
+        MusicInfo music = MusicUtil.getCurrentMusic();
+        String title = music.getTitle();
+        String artist = music.getArtist();
+        String album = music.getAlbum();
+
         Notification.Builder builder = new Notification.Builder(this);
         builder.setSmallIcon(R.drawable.ic_launcher);
-        builder.setContentTitle("this is title");
-        builder.setContentText("this is content");
-        Intent notificationIntent = new Intent(this, BaseActivity.class);
+        builder.setContentTitle(title);
+        builder.setContentText(artist+" - "+album);
+        builder.setOngoing(true);
+        Intent intent = new Intent(this, MusicActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                notificationIntent, 0);
-        builder.setDeleteIntent(pendingIntent);
-
+                intent, 0);
+        builder.setContentIntent(pendingIntent);
+        
         Notification notification = builder.build();
-
+        
         startForeground(1, notification);
     }
     

@@ -81,7 +81,7 @@ public class MusicAdapter extends BaseAdapter {
             mFavorList.add(music);
         }
     }
-    
+
     public void updateData() {
         int state = StateControl.getInstance().getCurrentState();
 
@@ -112,15 +112,25 @@ public class MusicAdapter extends BaseAdapter {
         return tempList;
     }
 
-    public void setCurrentMusic(MusicInfo music){
-        mCurrentMusic = music;
+    public void resetData() {
+        mMusicList = MusicUtil.getMusicData();
+        mAlbumMap = initMap(true);
+        mArtistMap = initMap(false);
+
+        updateData();
+        mCurrentMusic = MusicUtil.getCurrentMusic();
         notifyDataSetChanged();
     }
     
+    public void setCurrentMusic(MusicInfo music) {
+        mCurrentMusic = music;
+        notifyDataSetChanged();
+    }
+
     public ArrayList<MusicInfo> getData() {
         return mData;
     }
-    
+
     @Override
     public int getCount() {
         return mData.size();
@@ -147,13 +157,15 @@ public class MusicAdapter extends BaseAdapter {
             holder.icon = (ImageView) convertView.findViewById(R.id.item_icon);
             holder.title = (TextView) convertView.findViewById(R.id.item_title);
             holder.info = (TextView) convertView.findViewById(R.id.item_info);
-            holder.favor = (ImageView) convertView.findViewById(R.id.item_favor_bt);
+            holder.favor = (ImageView) convertView
+                    .findViewById(R.id.item_favor_bt);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.title.setTextColor(mContext.getResources().getColor(R.color.list_item_title_color));
+        holder.title.setTextColor(mContext.getResources().getColor(
+                R.color.list_item_title_color));
 
         int state = StateControl.getInstance().getCurrentState();
         setItemData(state, position);
@@ -169,29 +181,30 @@ public class MusicAdapter extends BaseAdapter {
             holder.icon.setVisibility(View.GONE);
         }
 
-        System.out.println(":::getview.........");
         if (state == Constants.TitleState.MUSIC
                 || state == Constants.TitleState.FAVORITE) {
             holder.favor.setVisibility(View.VISIBLE);
             holder.favor
                     .setImageResource(mData.get(position).isFavor() ? R.drawable.favorite_sel
                             : R.drawable.favorite_nor);
-            if((mData.get(position).equals(mCurrentMusic))){
-                holder.title.setTextColor(mContext.getResources().getColor(R.color.list_item_title_play_color));
+            if ((mData.get(position).equals(mCurrentMusic))) {
+                holder.title.setTextColor(mContext.getResources().getColor(
+                        R.color.list_item_title_play_color));
             } else {
-                holder.title.setTextColor(mContext.getResources().getColor(R.color.list_item_title_color));
+                holder.title.setTextColor(mContext.getResources().getColor(
+                        R.color.list_item_title_color));
             }
         } else {
             holder.favor.setVisibility(View.GONE);
         }
-        
+
         final int pos = position;
         final ImageView favorBt = holder.favor;
         holder.favor.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 MusicInfo data = mData.get(pos);
-                if(data.isFavor()) {
+                if (data.isFavor()) {
                     data.setFavor(false);
                     cancelFavor(data);
                     favorBt.setImageResource(R.drawable.favorite_nor);
@@ -203,7 +216,7 @@ public class MusicAdapter extends BaseAdapter {
                 notifyDataSetChanged();
             }
         });
-        
+
         holder.title.setText(mTitle);
         holder.info.setText(mInfo);
 
@@ -230,19 +243,20 @@ public class MusicAdapter extends BaseAdapter {
             mIcon = data.getIcon();
         } else if (state == Constants.TitleState.ARTIST) {
             mTitle = data.getArtist();
-            mInfo = "" + mArtistMusicNum.get(mTitle) + mContext.getString(R.string.artist_music_num);
+            mInfo = "" + mArtistMusicNum.get(mTitle)
+                    + mContext.getString(R.string.artist_music_num);
         } else if (state == Constants.TitleState.FAVORITE) {
             mTitle = data.getTitle();
             mInfo = data.getArtist() + " - " + data.getAlbum();
         }
     }
-    
+
     public void addFavor(MusicInfo data) {
         mFavorList.add(data);
-        MusicUtil.updataFavorDatabase(true,data);
+        MusicUtil.updataFavorDatabase(true, data);
         notifyDataSetChanged();
     }
-    
+
     public void cancelFavor(MusicInfo data) {
         Iterator<MusicInfo> iter = mFavorList.iterator();
         while (iter.hasNext()) {
@@ -250,28 +264,6 @@ public class MusicAdapter extends BaseAdapter {
                 iter.remove();
             }
         }
-        MusicUtil.updataFavorDatabase(false,data);
+        MusicUtil.updataFavorDatabase(false, data);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

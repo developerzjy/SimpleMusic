@@ -11,4 +11,6 @@
     
     <color name="dividing_line_color">#B5B5B5</color>
     
+    <color name="music_list_tool_bar_color">#444444</color>
+    <color name="music_lsit_split_color">#777777</color>
 </resources>

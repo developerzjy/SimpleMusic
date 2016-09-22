@@ -60,7 +60,7 @@ public class ContentFragment extends Fragment {
                     mAdapter.setCurrentMusic(musicInfo);
                     startPlayActivity(position, true);
                 } else {
-                    System.out.println(":::跳转其他页面。。。");
+                    // 跳转到其他页面
                 }
             }
         });
@@ -93,17 +93,20 @@ public class ContentFragment extends Fragment {
         mData = mAdapter.getData();
     }
 
-    private void startPlayActivity(int position, boolean isPlayingMusic) {
+    public void startPlayActivity(int position, boolean isPlayingMusic) {
         Intent intent = new Intent(mActivity, PlayActivity.class);
         intent.putExtra(Constants.INTENT_KYE_POSITION, position);
         intent.putExtra(Constants.INTENT_KYE_IS_PLAYING, isPlayingMusic);
         startActivity(intent);
     }
-    
+
     private void updateListUI() {
-        StateControl.getInstance().setCurrentState(
-                Constants.TitleState.MUSIC);
+        StateControl.getInstance().setCurrentState(Constants.TitleState.MUSIC);
         mAdapter.setCurrentMusic(MusicUtil.getCurrentMusic());
         mAdapter.notifyDataSetChanged();
+    }
+    
+    public void updateAllDate() {
+        mAdapter.resetData();
     }
 }

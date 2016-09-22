@@ -51,10 +51,66 @@
             android:text="@string/favorite_music_item_txt" />
     </LinearLayout>
 
+    <RelativeLayout 
+        android:id="@+id/music_list_tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/music_list_tool_bar_height"
+        android:background="@color/music_list_tool_bar_color"
+        android:layout_alignParentBottom="true">
+        
+        <ImageView
+            android:id="@+id/music_list_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/music_list_margin_vertical"
+            android:layout_marginBottom="@dimen/music_list_margin_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/songlist_icon"
+            android:contentDescription="@null"/>
+        <View 
+            android:id="@+id/tool_bar_split"
+            android:layout_width="@dimen/music_list_split_width"
+            android:layout_height="match_parent"
+            android:background="@color/music_lsit_split_color"
+            android:layout_toRightOf="@id/music_list_icon"/>
+        
+        <TextView 
+            android:id="@+id/current_music_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tool_bar_split"
+            android:layout_marginLeft="@dimen/music_list_margin_vertical"
+            android:layout_marginTop="@dimen/music_list_margin_vertical"
+            android:textSize="@dimen/item_title_text_size" />
+        
+        <TextView 
+            android:id="@+id/current_music_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tool_bar_split"
+            android:layout_marginLeft="@dimen/music_list_margin_vertical"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/current_music_title"
+            android:textSize="@dimen/item_info_text_size" />
+        
+        <Button 
+            android:id="@+id/scan_music_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:background="@null"
+            android:text="@string/scan_music_str"
+            android:textSize="20sp"/>
+    </RelativeLayout>
+    
     <FrameLayout
         android:id="@+id/content_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/music_list_tool_bar"
         android:layout_below="@id/label_bar"
         android:background="@color/content_color" />
 

@@ -8,12 +8,15 @@ import com.example.simplemusic.tools.Constants;
 import com.example.simplemusic.tools.MusicLog;
 import com.example.simplemusic.tools.MusicUtil;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -27,7 +30,7 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
     private TextView mArtist;
     private TextView mAlbum;
     private ImageView mFavorBt;
-    private ImageView mPointer;
+    // private ImageView mPointer;
     private ImageView mDish;
     private TextView mCurrentTime;
     private TextView mTotalTime;
@@ -44,6 +47,8 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
     private boolean mIsListening = false;
     private boolean mIsPlaying;
 
+    private ObjectAnimator mDishRotation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +63,7 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
         mArtist = (TextView) findViewById(R.id.paly_activity_music_artist);
         mAlbum = (TextView) findViewById(R.id.play_activity_music_album);
         mFavorBt = (ImageView) findViewById(R.id.play_activity_favor_button);
-        mPointer = (ImageView) findViewById(R.id.play_music_view_pointer);
+        // mPointer = (ImageView) findViewById(R.id.play_music_view_pointer);
         mDish = (ImageView) findViewById(R.id.play_music_view_dish);
         mCurrentTime = (TextView) findViewById(R.id.current_progress_time);
         mTotalTime = (TextView) findViewById(R.id.total_length_time);
@@ -72,7 +77,8 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
         mIsPlaying = getIntent().getBooleanExtra(
                 Constants.INTENT_KYE_IS_PLAYING, false);
         mMusicList = MusicUtil.getMusicList();
-        MusicInfo music = mMusicList.get(mPositionInList);
+        MusicInfo music = MusicUtil.getCurrentMusic();
+        mPositionInList = MusicUtil.getPosByMusicInfo(music);
 
         updateUIByMusic(music);
 
@@ -110,14 +116,30 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
         mFavorBt.setOnClickListener(this);
         mBack.setOnClickListener(this);
     }
-    
+
+    @SuppressLint("NewApi")
+    private void playDish() {
+        if (mDishRotation.isPaused()) {
+            mDishRotation.resume();
+        } else {
+            mDishRotation.start();
+        }
+    }
+
+    @SuppressLint("NewApi")
+    private void stopDish() {
+        mDishRotation.pause();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         mIsListening = false;
-        if(mIsPlaying) {
-            mHandler.sendEmptyMessageDelayed(Constants.HANDLE_MSG_UPDATE_PROGRESS,
+        if (mIsPlaying) {
+            mHandler.sendEmptyMessageDelayed(
+                    Constants.HANDLE_MSG_UPDATE_PROGRESS,
                     Constants.UPDATE_FREQUENCY_MILLISECOND);
+            playDish();
         }
     }
 
@@ -131,7 +153,7 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
                 case Constants.HANDLE_MSG_UPDATE_PROGRESS:
                     updateProgress();
 
-                    if(mIsPlaying){
+                    if (mIsPlaying) {
                         mHandler.sendEmptyMessageDelayed(
                                 Constants.HANDLE_MSG_UPDATE_PROGRESS,
                                 Constants.UPDATE_FREQUENCY_MILLISECOND);
@@ -141,8 +163,11 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
                 }
             }
         };
-        mHandler.sendEmptyMessageDelayed(Constants.HANDLE_MSG_UPDATE_PROGRESS,
-                Constants.UPDATE_FREQUENCY_MILLISECOND);
+        if (mIsPlaying) {
+            mHandler.sendEmptyMessageDelayed(
+                    Constants.HANDLE_MSG_UPDATE_PROGRESS,
+                    Constants.UPDATE_FREQUENCY_MILLISECOND);
+        }
 
         mOnPlayEventListener = new OnPlayEventListener() {
 
@@ -152,6 +177,15 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
                 playNext();
             }
         };
+        initDishAnim();
+    }
+
+    private void initDishAnim() {
+        mDishRotation = ObjectAnimator.ofFloat(mDish, "rotation", 0, 360f);
+        mDishRotation.setDuration(5000);
+        LinearInterpolator lin = new LinearInterpolator();
+        mDishRotation.setInterpolator(lin);
+        mDishRotation.setRepeatCount(-1);
     }
 
     @Override
@@ -163,9 +197,9 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
             playPrevious();
         } else if (id == R.id.tool_next) {
             playNext();
-        } else if(id == R.id.play_activity_favor_button) {
+        } else if (id == R.id.play_activity_favor_button) {
             addOrCancelFavor();
-        } else if(id == R.id.play_activity_back_button) {
+        } else if (id == R.id.play_activity_back_button) {
             finish();
         }
     }
@@ -175,6 +209,7 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
             pause();
             mSwitch.setImageResource(R.drawable.play_sel);
             mIsPlaying = false;
+            stopDish();
         } else {
             start();
             mSwitch.setImageResource(R.drawable.stop_sel);
@@ -182,31 +217,32 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
             mHandler.sendEmptyMessageDelayed(
                     Constants.HANDLE_MSG_UPDATE_PROGRESS,
                     Constants.UPDATE_FREQUENCY_MILLISECOND);
+            playDish();
         }
     }
-    
+
     @Override
     public void playPrevious() {
         super.playPrevious();
         updateUIByMusic(MusicUtil.getCurrentMusic());
-        if(mPositionInList == 0){
+        if (mPositionInList == 0) {
             mPositionInList = mMusicList.size();
         } else {
             mPositionInList--;
         }
     }
-    
+
     @Override
     public void playNext() {
         super.playNext();
         updateUIByMusic(MusicUtil.getCurrentMusic());
-        if(mPositionInList == mMusicList.size()){
+        if (mPositionInList == mMusicList.size()) {
             mPositionInList = 0;
         } else {
             mPositionInList++;
         }
     }
-    
+
     private void addOrCancelFavor() {
         MusicInfo music = mMusicList.get(mPositionInList);
         boolean isFavor = music.isFavor();
@@ -217,7 +253,7 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
                 : R.drawable.favorite_nor);
 
     }
-    
+
     private void updateProgress() {
         if (mPlayer == null) {
             return;
@@ -231,14 +267,17 @@ public class PlayActivity extends BaseActivity implements OnClickListener {
         mSeekBar.setProgress(currentPos);
         // mCurrentTime.setText(MusicUtil.formatTime(currentPos));
     }
-    
+
     private void updateUIByMusic(MusicInfo music) {
+        Resources res = getResources();
         mTitle.setText(music.getTitle());
-        mArtist.setText("作者：" + music.getArtist());
-        mAlbum.setText("专辑：" + music.getAlbum());
+        mArtist.setText(res.getString(R.string.play_music_artist_str)
+                + music.getArtist());
+        mAlbum.setText(res.getString(R.string.play_music_album_str)
+                + music.getAlbum());
         mFavorBt.setImageResource(music.isFavor() ? R.drawable.favorite_sel
                 : R.drawable.favorite_nor);
-        mCurrentTime.setText("00:00");
+        mCurrentTime.setText(res.getString(R.string.init_time_str));
         mTotalTime.setText(MusicUtil.formatTime(music.getLength()));
         mSeekBar.setMax(music.getLength());
     }

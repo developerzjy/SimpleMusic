@@ -14,4 +14,8 @@
     <dimen name="title_bt_horizontal_padding">10dp</dimen>
     <dimen name="title_bt_vertical_padding">6dp</dimen>
     <dimen name="dividing_line_height">2px</dimen>
+    
+    <dimen name="music_list_tool_bar_height">60dp</dimen>
+    <dimen name="music_list_margin_vertical">10dp</dimen>
+    <dimen name="music_list_split_width">1px</dimen>
 </resources>
